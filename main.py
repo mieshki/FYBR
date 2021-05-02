@@ -94,8 +94,8 @@ def hgw(data):
 
 ############### End of declarations ###############
 
-#GPX_FILE_PATH = "C:\\Users\\mieshki\\PycharmProjects\\osm-research\\gpx\\2021-04-24_353412361_From Stanisława Skarżyńskiego 8B, 80-463, Gdańsk Oliwa to Stefana Żeromskiego 6A, 84-150, Hel.gpx"
-GPX_FILE_PATH = "C:\\Users\\mieshki\\PycharmProjects\\osm-research\\gpx\\2021-04-24_353992574_Gravel Ride.gpx"
+#GPX_FILE_PATH = "C:\\Users\\mieshki\\PycharmProjects\\osm-research\\gpx\\hel.gpx"
+GPX_FILE_PATH = "/gpx/hel.gpx"
 
 gps_track_points = read_gpx_file(GPX_FILE_PATH)
 result = execute_query(create_query_from_list(gps_track_points, 'way'))
@@ -107,3 +107,5 @@ hgw(result)
 #plt.plot(gpxTable['lon'], gpxTable['lat'], color="red")
 plt.show()
 i = 999
+
+
