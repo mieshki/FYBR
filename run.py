@@ -14,7 +14,8 @@ def temp(data):
     allWays = []
     try:
         for way in data.ways:
-            nodes = way.get_nodes(resolve_missing=True)
+            #nodes = way.get_nodes(resolve_missing=True)
+            nodes = way.nodes
             print(f'Nodes no.{i}: {nodes}')
             newWay = []
             for node in nodes:
@@ -34,14 +35,18 @@ def hello():
     start_cords = (54.38714, 18.602002)
     start_map = folium.Map(location=start_cords, zoom_start=14, width='40%', height='40%')
 
-    gps_track_points = read_gpx_file(GPX_FILE_PATH)
+    # file_path = "C:\\_projects\\FYBR\\gpx\\hel.gpx"
+    # file_path = "C:\\_projects\\FYBR\\gpx\\hel.gpx"
+    file_path = "C:\\_projects\\FYBR\\gpx\\2021-04-24_353992574_Gravel Ride.gpx"
+
+    gps_track_points = read_gpx_file(file_path)
     result = execute_query(create_query_from_list(gps_track_points, 'way'))
 
     allWays = temp(result)
     for way in allWays:
         folium.vector_layers.PolyLine(locations=way, color='green', weight=5, opacity=0.8).add_to(start_map)
 
-    with open("D:\\Python\\FYBR\\gpx\\hel.gpx", "r") as f:
+    with open(file_path, "r") as f:
         gpx1 = gpxpy.parse(f)
         points = gpx1.tracks[0].segments[0].points
         tuplePoints = []

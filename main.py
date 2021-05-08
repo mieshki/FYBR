@@ -8,20 +8,52 @@ import plotly.express as px
 
 
 def create_query_from_list(list, type):
-    query_fist = "[out:json];" + type + "[\"surface\"][\"highway\"=\"path\"](around:5,"
+    query_fist = "[out:json];" + type + "(around:100,"
+    #query_second = "(node(around:25, "#50.61193,-4.68711#"
+
+    coords = ""
 
     iter = 0
     for element in list:
         iter += 1
-        if iter % 50 == 1:
+        if iter % 20 == 1:
             query_fist += f"{element.latitude}, {element.longitude}, "
+            coords += f"{element.latitude}, {element.longitude}, "
+            #query_second += f"{element.latitude}, {element.longitude}, "
 
     #query_fist += f"{list[0].latitude}, {list[0].longitude}, "
 
     query_fist = query_fist[:len(query_fist) - 2]
-    query_fist += ");"
+    coords = coords[:len(coords) - 2]
+    #query_second = query_second[:len(query_second) - 2]
 
-    query = query_fist + "out body geom;"
+    query_fist += ")[\"surface\"];"#[\"highway\"=\"path\"] ;"
+    #query_fist += ">->.a;"
+
+    #query_second += ")-.a);"
+
+    #query = query_fist + "out;"#query_second + "out;"#"out body geom;"
+    query = query_fist + "out body; >; out skel qt;"#query_second + "out;"#"out body geom;"
+
+    #query = '''
+    #[out:json];
+    #node(around:20000, 50.61193,-4.68711) -> .allnodes;
+    #way(bn.allnodes)[highway];
+    #node(w)(around:20000, 50.61193,-4.68711);
+    #out;
+    #'''
+
+    #print(f'Coords: {coords}')
+    #test_query = '[out:json][timeout:25]; (node["highway"="cycleway"](\n'
+    #test_query += coords
+    #test_query += ');\n'
+    #test_query += '\nway["highway"="cycleway"](\n'
+    #test_query += coords + ');\n'
+    #test_query += '\nrelation["highway"="cycleway"]('
+    #test_query += coords + ');'
+    #test_query += ');out body; \n>; \nout skel qt;\n'
+
+    #return test_query
     return query
 
 
@@ -94,10 +126,10 @@ def hgw(data):
 
 ############### End of declarations ###############
 
-#GPX_FILE_PATH = "C:\\Users\\mieshki\\PycharmProjects\\osm-research\\gpx\\hel.gpx"
-GPX_FILE_PATH = "D:\\Python\\FYBR\\gpx\\hel.gpx"
+GPX_FILE_PATH = "C:\\_projects\\FYBR\\gpx\\hel.gpx"
+#GPX_FILE_PATH = "D:\\Python\\FYBR\\gpx\\hel.gpx"
 
-gps_track_points = read_gpx_file(GPX_FILE_PATH)
+#gps_track_points = read_gpx_file(GPX_FILE_PATH)
 #result = execute_query(create_query_from_list(gps_track_points, 'way'))
 #plot_list(gps_track_points, 'black')
 
@@ -105,7 +137,7 @@ gps_track_points = read_gpx_file(GPX_FILE_PATH)
 #hgw(result)
 
 #plt.plot(gpxTable['lon'], gpxTable['lat'], color="red")
-plt.show()
-i = 999
+#plt.show()
+#i = 999
 
 
