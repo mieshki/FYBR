@@ -1,59 +1,30 @@
 from app import create_app
-import folium
-import gpxpy
-from main import *
-
+from app.map_helper import *
+from app.utilities import *
 
 app = create_app()
 
-def temp(data):
-    global nodes
-
-    i = 0
-    print(f'Found {data.ways} ways')
-    allWays = []
-    try:
-        for way in data.ways:
-            #nodes = way.get_nodes(resolve_missing=True)
-            nodes = way.nodes
-            print(f'Nodes no.{i}: {nodes}')
-            newWay = []
-            for node in nodes:
-                newWay.append((node.lat, node.lon))
-            #plot_list(nodes, 'red')  # colour[i % 6])
-            i += 1
-            allWays.append(newWay)
-            # print(f'lon={node.lon}, lat={node.lat}')
-        # for k, v in way.tags.items():
-        #    print(k, v)
-    except:
-        print('Exception')
-    return allWays
 
 @app.route("/")
 def hello():
-    start_cords = (54.38714, 18.602002)
-    start_map = folium.Map(location=start_cords, zoom_start=14, width='40%', height='40%')
+    file_path = "gpx\\hel.gpx"
 
-    # file_path = "C:\\_projects\\FYBR\\gpx\\hel.gpx"
-    # file_path = "C:\\_projects\\FYBR\\gpx\\hel.gpx"
-    file_path = "C:\\_projects\\FYBR\\gpx\\2021-04-24_353992574_Gravel Ride.gpx"
+    map_config = calculate_map_start_point(file_path)
 
-    gps_track_points = read_gpx_file(file_path)
-    result = execute_query(create_query_from_list(gps_track_points, 'way'))
+    map = folium.Map(location=map_config.center_point, zoom_start=map_config.zoom, width='100%', height='80%')
 
-    allWays = temp(result)
-    for way in allWays:
-        folium.vector_layers.PolyLine(locations=way, color='green', weight=5, opacity=0.8).add_to(start_map)
+    apply_gpx_track_on_map(file_path, map, 'red', 7, 1.0)
 
-    with open(file_path, "r") as f:
-        gpx1 = gpxpy.parse(f)
-        points = gpx1.tracks[0].segments[0].points
-        tuplePoints = []
-        for point in points:
-            tuplePoints.append((point.latitude, point.longitude))
-    folium.vector_layers.PolyLine(locations=tuplePoints, color='red', weight=5, opacity=0.8).add_to(start_map)
-    return start_map._repr_html_()
+    query = OverpassQuery(file_path)
+    query.set_radius(3)
+    #query.add_key_value_tag(('surface', '*'))
+    query.add_key_value_tag(('highway', 'cycleway'))
+
+    data = query.create_and_execute_query()
+
+    apply_overpass_query_results_on_map(data, map, 'green', 6, 0.8)
+
+    return map._repr_html_()
 
 
 if __name__ == "__main__":
