@@ -52,9 +52,9 @@ def hello():
     start_map.save('app/templates/map.html')"""
     return render_template("base.html")
 
-@app.route('/maps/map.html')
+@app.route('/maps/index.html')
 def mapa():
-    return render_template('maps/map.html')
+    return render_template('maps/index.html')
 
 @app.route('/auth/login.html')
 def login():
