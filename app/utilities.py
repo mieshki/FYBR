@@ -12,13 +12,30 @@ class MapConfig:
 
     pass
 
+class Overpass:
+    @staticmethod
+    def execute_queries(queries):
+        api = overpy.Overpass()
+
+        all_queries = '[out:json];('
+        for query in queries:
+            all_queries += query.create_query('way')
+
+        all_queries += '); out body; >; out skel qt;'
+
+        print(f'Executing QUERY: {all_queries}')
+        output = api.query(all_queries)
+        print(f'Result: {output}')
+
+        return output
+    pass
 
 class OverpassQuery:
-    around = 10
-    list_of_key_values_tags = []
-    all_points = ''
 
     def __init__(self, gpx_file_path):
+        self.around = 10
+        self.list_of_key_values_tags = []
+        self.all_points = ''
         self.read_points_from_gpx_file(gpx_file_path)
 
     def read_points_from_gpx_file(self, gpx_file_path):
@@ -29,7 +46,7 @@ class OverpassQuery:
             i = 0
             for point in points_from_gpx_file:
                 i += 1
-                if i % 20 == 0:
+                if i % 200 == 0:
                     self.all_points += f"{point.latitude}, {point.longitude}, "
 
             self.all_points = self.all_points[:len(self.all_points) - 2]
@@ -38,11 +55,13 @@ class OverpassQuery:
         self.list_of_key_values_tags.append(key_value_tag)
 
     def create_query(self, query_type):
-        query = '[out:json];' + query_type + '(around:' + str(self.around) + ','
-
         if len(self.all_points) == 0:
             print('No gpx file loaded correctly')
             return
+
+        query = query_type + '('
+
+        query += f'around:' + str(self.around) + ','
         query += self.all_points + ')'
 
         for key_value in self.list_of_key_values_tags:
@@ -56,20 +75,8 @@ class OverpassQuery:
 
             query += tag
 
-        query += ';out body; >; out skel qt;'
+        query += ';'
         return query
-
-    @staticmethod
-    def execute_query(query):
-        api = overpy.Overpass()
-        print(f'Executing QUERY: {query}')
-        output = api.query(query)
-        print(f'Result: {output}')
-        return output
-
-    def create_and_execute_query(self):
-        query = self.create_query('way')
-        return self.execute_query(query)
 
     def set_radius(self, radius):
         self.around = radius
