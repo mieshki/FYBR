@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  postgresql:
+    image: postgres:latest
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: FYBR
+      POSTGRES_USER: FYBR
+      POSTGRES_PASSWORD: FYBR
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
+    driver: local
