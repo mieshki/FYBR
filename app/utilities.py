@@ -46,7 +46,7 @@ class OverpassQuery:
             i = 0
             for point in points_from_gpx_file:
                 i += 1
-                if i % 200 == 0:
+                if i % 100 == 0:
                     self.all_points += f"{point.latitude}, {point.longitude}, "
 
             self.all_points = self.all_points[:len(self.all_points) - 2]

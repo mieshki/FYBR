@@ -76,7 +76,6 @@ def print_cycleways_on_map(data, map, color, width, opacity):
         folium.vector_layers.PolyLine(locations=temp_list_of_nodes, color=color, weight=width, opacity=opacity, tooltip=generate_tooltip(way)).add_to(map)
         temp_list_of_nodes = []
 
-        tags_tooltip = ''
         print(f'way:{way}\n')
     pass
 
