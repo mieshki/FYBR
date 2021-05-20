@@ -2,19 +2,18 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
-DB_NAME = 'FYBR'
-DB_PASSWORD = 'FYBR'
-
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='FYBR'
     )
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://postgres:{DB_PASSWORD}@localhost/{DB_NAME}'
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://FYBR:FYBR@127.0.0.1/FYBR'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-    db = SQLAlchemy.init_app(app)
-    db.session
+    db.init_app(app)
+    from app import models
+    with app.app_context():
+        db.create_all()
 
     return app
+
