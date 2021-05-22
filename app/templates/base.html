@@ -21,10 +21,10 @@
                               <a class="py-2-none d-md-inline-block nav-link" href="/">Strona główna</a>
                           </li>
                           <li class="nav-item">
-                              <a class="py-2-none d-md-inline-block nav-link" href="/maps/index.html">Mapa</a>
+                              <a class="py-2-none d-md-inline-block nav-link" href="/maps/index">Mapa</a>
                           </li>
                           <li class="nav-item">
-                              <a class="py-2-none d-md-inline-block nav-link" href="/auth/login.html">Login</a>
+                              <a class="py-2-none d-md-inline-block nav-link" href="/auth/login">Login</a>
                           </li>
                       </ul>
                   </div>
@@ -33,8 +33,8 @@
               </nav>
           {% endblock %}
       </header>
-      {% block inside_body %}
         <div class="container text-center main mt-3">
+            {% block content %}
             <div class="row p-5">
                 <div class="col-4 mt-2">
                     <img src="{{url_for('static', filename='mapper.jpg')}}" class="img-fluid" >
@@ -53,7 +53,7 @@
         </div>
       {% endblock %}
         {% block footer %}
-      <footer class="bd-footer py-5 mt-5 bg-light">
+      <footer class="bg-light  bd-footer py-5 mt-5 ">
           <div class="container py-5 ">
             <div class="row justify-content-center">
               <div class="col-lg-3 mb-3">
@@ -71,6 +71,7 @@
               </div>
             </div>
           </div>
+
         </footer>
 
         {% endblock %}

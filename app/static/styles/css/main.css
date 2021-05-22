@@ -3,6 +3,7 @@ body{
     background-size: 100%;
     background-repeat: no-repeat;
     background-image: url(/static/background.jpg);
+    background-position: center bottom;
     margin: 0;
 }
 header{
@@ -24,3 +25,4 @@ nav{
     background-color: aquamarine;
     align-content: center;
 }
+
