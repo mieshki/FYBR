@@ -50,7 +50,7 @@ def hello():
             tuplePoints.append((point.latitude, point.longitude))
     folium.vector_layers.PolyLine(locations=tuplePoints, color='red', weight=5, opacity=0.8).add_to(start_map)
     start_map.save('app/templates/map.html')"""
-    return render_template("base.html")
+    return render_template("index.html")
 
 
 
