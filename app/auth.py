@@ -49,7 +49,7 @@ def login():
             # Account doesnt exist or username/password incorrect
             flash('Incorrect username/password')
 
-    return render_template('login.html')
+    return render_template('auth/login.html')
 
 
 @auth.route('auth/register', methods=['GET', 'POST'])
@@ -88,16 +88,16 @@ def register():
         # Form is empty... (no POST data)
         flash('Please fill out the form!')
     # Show registration form with message (if any)
-    return render_template('register.html')
+    return render_template('auth/register.html')
 
 
-@auth.route('/profile')
+@auth.route('/auth/profile')
 def profile():
     # Check if user is loggedin
     if 'loggedin' in session:
         account = Users.query.filter_by(id=session['id']).first()
         # Show the profile page with account info
-        return render_template('profile.html', account=account)
+        return render_template('auth/profile.html', account=account)
     # User is not loggedin redirect to login page
     return redirect(url_for('auth.login'))
 

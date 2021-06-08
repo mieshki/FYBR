@@ -1,6 +1,8 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, session, redirect, url_for
 import folium
 import gpxpy
+
+from app.models import Users, Ride
 
 views = Blueprint('views', __name__)
 
@@ -27,3 +29,12 @@ def test():
     folium.LayerControl().add_to(start_map)
     start_map.save('app/templates/map.html')
     return render_template('maps/index.html')
+
+@views.route('/rides')
+def get_rides():
+    # Check if user is loggedin
+    if 'loggedin' in session:
+        rides = Ride.query.filter_by(user_id=session['id']).all()
+        return render_template('rides.html', rides=rides)
+    # User is not loggedin redirect to login page
+    return redirect(url_for('auth.login'))

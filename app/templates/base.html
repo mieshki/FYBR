@@ -27,9 +27,19 @@
                           <li class="nav-item">
                               <a class="py-2-none d-md-inline-block nav-link" href="/maps/index">Mapa</a>
                           </li>
+                          {% if session['loggedin'] != true %}
                           <li class="nav-item">
                               <a class="py-2-none d-md-inline-block nav-link" href="/auth/login">Login</a>
                           </li>
+                          {% else %}
+                          <li class="nav-item">
+                              <a class="py-2-none d-md-inline-block nav-link" href="/auth/profile">Profil</a>
+                          </li>
+                          <li class="nav-item">
+                              <a class="py-2-none d-md-inline-block nav-link" href="/rides">Przejazdy</a>
+                          </li>
+                          {% endif %}
+
                       </ul>
                   </div>
               </nav>
@@ -38,7 +48,7 @@
 
       <div class="container text-center main">
           {% block content %}
-          <div class="row p-5">
+          <div class="row p-3">
                 <div class="col-5 mt-auto mb-auto">
                     <img src="{{url_for('static', filename='mapper.jpg')}}" class="img-fluid " >
                 </div>
@@ -54,7 +64,7 @@
 
       <footer class="bg-light  bd-footer py-3">
                 {% block footer %}
-          <div class=" py-5 ">
+          <div class=" py-4 ">
             <div class="row justify-content-center">
               <div class="col-lg-3 mb-3">
                 <a class="d-inline-flex align-items-center mb-2 link-dark text-decoration-none" href="/" aria-label="FYBR">
