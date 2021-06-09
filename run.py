@@ -46,13 +46,7 @@ def hello():
     map.save('app/templates/maps/map.html')
     return render_template("base.html")
 
-@app.route('/maps/index.html')
-def mapa():
-    return render_template('maps/index.html')
 
-@app.route('/auth/login.html')
-def login():
-    return render_template("auth/login.html")
 
 if __name__ == "__main__":
     app.run(debug=True)

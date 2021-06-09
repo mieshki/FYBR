@@ -4,12 +4,14 @@ from sqlalchemy.sql import func
 
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
-    first_name = db.Column(db.String(50))
-    last_name = db.Column(db.String(50))
+    firstname = db.Column(db.String(50))
+    lastname = db.Column(db.String(50))
     username = db.Column(db.String(50))
     email = db.Column(db.String(50), unique=True)
-    rides = db.relationship('Ride')
-    bikes = db.relationship('Bike')
+    password = db.Column(db.String(150))
+    rides = db.relationship('Ride', backref="user")
+    bikes = db.relationship('Bike', backref="user")
+
 
 
 class Ride(db.Model):
@@ -17,8 +19,9 @@ class Ride(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     bike_id = db.Column(db.Integer, db.ForeignKey('bike.id'))
     date = db.Column(db.DateTime(timezone=True), default=func.now())  # auto timestamp after upload
-    gpx_file = db.Column(db.String(100000))  # How to store gpx files in database
-    photos = db.relationship('Photo')
+    name = db.Column(db.String(100))
+    gpx_file = db.Column(db.LargeBinary)  # gpx files in byte array
+    photos = db.relationship('Photo', backref="ride")
 
 
 class Photo(db.Model):
@@ -31,4 +34,4 @@ class Bike(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
     name = db.Column(db.String(50))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    rides = db.relationship('Ride')
+    rides = db.relationship('Ride', backref="bike")

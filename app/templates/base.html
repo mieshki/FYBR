@@ -6,6 +6,10 @@
         <title>{% block title %} FYBR {% endblock %}</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='styles/css/bootstrap.min.css') }}"/>
         <link rel="stylesheet" type="text/css"  href="{{ url_for('static', filename = 'styles/css/main.css') }}"/>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Passion+One" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Oxygen" rel="stylesheet" type="text/css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
     <body>
@@ -21,40 +25,46 @@
                               <a class="py-2-none d-md-inline-block nav-link" href="/">Strona główna</a>
                           </li>
                           <li class="nav-item">
-                              <a class="py-2-none d-md-inline-block nav-link" href="/maps/index.html">Mapa</a>
+                              <a class="py-2-none d-md-inline-block nav-link" href="/maps/index">Mapa</a>
+                          </li>
+                          {% if session['loggedin'] != true %}
+                          <li class="nav-item">
+                              <a class="py-2-none d-md-inline-block nav-link" href="/auth/login">Login</a>
+                          </li>
+                          {% else %}
+                          <li class="nav-item">
+                              <a class="py-2-none d-md-inline-block nav-link" href="/auth/profile">Profil</a>
                           </li>
                           <li class="nav-item">
-                              <a class="py-2-none d-md-inline-block nav-link" href="/auth/login.html">Login</a>
+                              <a class="py-2-none d-md-inline-block nav-link" href="/rides">Przejazdy</a>
                           </li>
+                          {% endif %}
+
                       </ul>
                   </div>
-
-
               </nav>
           {% endblock %}
       </header>
-      {% block inside_body %}
-        <div class="container text-center main mt-3">
-            <div class="row p-5">
-                <div class="col-4 mt-2">
-                    <img src="{{url_for('static', filename='mapper.jpg')}}" class="img-fluid" >
+
+      <div class="container text-center main">
+          {% block content %}
+          <div class="row p-3">
+                <div class="col-5 mt-auto mb-auto">
+                    <img src="{{url_for('static', filename='mapper.jpg')}}" class="img-fluid " >
                 </div>
-                <div class="col-8 mt-2">
+                <div class="col-7 mt-auto mb-auto">
                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ornare rhoncus auctor. Mauris iaculis quis orci in dignissim. Suspendisse commodo eu lorem ac pulvinar. Ut vestibulum posuere ligula quis sollicitudin. Aenean pretium sit amet leo quis laoreet. Phasellus lobortis justo sit amet nisi varius, at luctus tortor auctor. Nullam lobortis erat eu mauris ornare volutpat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur scelerisque blandit erat, eu vulputate dui sollicitudin id. Nulla facilisi. Sed iaculis euismod metus, imperdiet ultrices est. Maecenas egestas elementum libero sed lacinia.
                         Nullam risus leo, eleifend eget nisl nec, pretium rutrum lectus. Sed eu justo ullamcorper, lacinia elit eu, pellentesque felis. Duis quis lectus semper, interdum nisi at, imperdiet lorem. Etiam placerat lectus sed elit vehicula, vel accumsan turpis tincidunt. Cras eget magna lobortis, faucibus elit in, ultrices libero. Vestibulum quis ultricies neque. Morbi semper convallis tellus id pretium.
                         Aenean consectetur ultrices suscipit. Quisque at urna non nibh laoreet accumsan. Maecenas tincidunt odio odio, eu sagittis diam rutrum sed. Pellentesque condimentum nisl sed elit iaculis imperdiet. Phasellus nisl urna, imperdiet sed risus quis, porta rutrum odio. Suspendisse sit amet lorem fringilla justo mollis viverra non eu sem. Nullam sed est non nisl bibendum rhoncus. Maecenas placerat libero eget purus pharetra ultrices. Etiam sodales mauris lacus, quis viverra mauris accumsan in. Suspendisse nec ex sed metus elementum posuere iaculis in felis. Donec vel felis id odio aliquam eleifend.
                 </div>
-                <div class="row">
-                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ornare rhoncus auctor. Mauris iaculis quis orci in dignissim. Suspendisse commodo eu lorem ac pulvinar. Ut vestibulum posuere ligula quis sollicitudin. Aenean pretium sit amet leo quis laoreet. Phasellus lobortis justo sit amet nisi varius, at luctus tortor auctor. Nullam lobortis erat eu mauris ornare volutpat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur scelerisque blandit erat, eu vulputate dui sollicitudin id. Nulla facilisi. Sed iaculis euismod metus, imperdiet ultrices est. Maecenas egestas elementum libero sed lacinia.
-                        Nullam risus leo, eleifend eget nisl nec, pretium rutrum lectus. Sed eu justo ullamcorper, lacinia elit eu, pellentesque felis. Duis quis lectus semper, interdum nisi at, imperdiet lorem. Etiam placerat lectus sed elit vehicula, vel accumsan turpis tincidunt. Cras eget magna lobortis, faucibus elit in, ultrices libero. Vestibulum quis ultricies neque. Morbi semper convallis tellus id pretium.
-                    Aenean consectetur  ultrices suscipit. Quisque at urna non nibh laoreet accumsan. Maecenas tincidunt odio odio, eu sagittis diam rutrum sed. Pellentesque condimentum nisl sed elit iaculis imperdiet. Phasellus nisl urna, imperdiet sed risus quis, porta rutrum odio. Suspendisse sit amet lorem fringilla justo mollis viverra non eu sem. Nullam sed est non nisl bibendum rhoncus. Maecenas placerat libero eget purus pharetra ultrices. Etiam sodales mauris lacus, quis viverra mauris accumsan in. Suspendisse nec ex sed metus elementum posuere iaculis in felis. Donec vel felis id odio aliquam eleifend.
-                </div>
             </div>
-        </div>
-      {% endblock %}
-        {% block footer %}
-      <footer class="bd-footer py-5 mt-5 bg-light">
-          <div class="container py-5 ">
+          {% endblock %}
+      </div>
+
+
+      <footer class="bg-light  bd-footer py-3">
+                {% block footer %}
+          <div class=" py-4 ">
             <div class="row justify-content-center">
               <div class="col-lg-3 mb-3">
                 <a class="d-inline-flex align-items-center mb-2 link-dark text-decoration-none" href="/" aria-label="FYBR">
@@ -66,14 +76,12 @@
                 <ul class="list-unstyled">
                   <li class="mb-2"><a href="">Issues</a></li>
                   <li class="mb-2"><a href="">Discussions</a></li>
-                  <li class="mb-2"><a href="">Corporate sponsors</a></li>
                 </ul>
               </div>
             </div>
           </div>
+                    {% endblock %}
         </footer>
-
-        {% endblock %}
       <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
       <script type="text/javascript" src="{{url_for('static', filename='styles/js/bootstrap.min.js')}}"></script>
     </body>

@@ -1,9 +1,7 @@
 from flask import Flask
-#from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 
-#db = SQLAlchemy()
-DB_NAME = 'FYBR'
-DB_PASSWORD = 'FYBR'
+db = SQLAlchemy()
 
 
 def create_app():
@@ -11,10 +9,19 @@ def create_app():
     app.config.from_mapping(
         SECRET_KEY='FYBR'
     )
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://postgres:{DB_PASSWORD}@localhost/{DB_NAME}'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    #db = SQLAlchemy.init_app(app)
-    #db.session
+    from .views import views
+    from .auth import auth
+    app.register_blueprint(views, url_prefix='/')
+    app.register_blueprint(auth, url_prefix='/')
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://FYBR:FYBR@127.0.0.1/FYBR'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    db.init_app(app)
+
+    # only for single usage. Remove it after first run
+    from app import models
+    with app.app_context():
+        db.create_all()
 
     return app
