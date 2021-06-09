@@ -1,10 +1,7 @@
 import gpxpy
 import pandas as pd
-#import geopandas as gpd
-import matplotlib
 import matplotlib.pyplot as plt
 import overpy
-import plotly.express as px
 
 
 def create_query_from_list(list, type):

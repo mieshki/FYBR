@@ -1,8 +1,3 @@
-import copy
-from app import create_app
-import folium
-import gpxpy
-from main import *
 from flask import render_template
 
 from app import create_app

@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, session, redirect, url_for, request
 import folium
 import gpxpy
-
 from . import db
 from app.models import Ride, Users
 
