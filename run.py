@@ -7,7 +7,9 @@ from app.utilities import *
 app = create_app()
 
 
-@app.route("/")
+
+
+@app.route("/ll")
 def hello():
     file_path = "gpx\\hel.gpx"
 
@@ -32,7 +34,7 @@ def hello():
     queries_list.append(query_surfaces)
 
     data = Overpass.execute_queries(queries_list)
-
+    #print(data)
     print_cycleways_on_map(data, map, 'black', 10, 0.8)
     print_surfaces_no_map(data, map, 10, 0.8)
     # print_overpass_query_results_on_map(data, map, 'green', 6, 0.8)

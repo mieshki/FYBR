@@ -21,6 +21,7 @@ class Ride(db.Model):
     date = db.Column(db.DateTime(timezone=True), default=func.now())  # auto timestamp after upload
     name = db.Column(db.String(100))
     gpx_file = db.Column(db.LargeBinary)  # gpx files in byte array
+    html_map = db.Column(db.String)
     photos = db.relationship('Photo', backref="ride")
 
 

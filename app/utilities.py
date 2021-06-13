@@ -12,6 +12,7 @@ class MapConfig:
 
     pass
 
+
 class Overpass:
     @staticmethod
     def execute_queries(queries):
@@ -28,7 +29,9 @@ class Overpass:
         print(f'Result: {output}')
 
         return output
+
     pass
+
 
 class OverpassQuery:
 
@@ -39,17 +42,16 @@ class OverpassQuery:
         self.read_points_from_gpx_file(gpx_file_path)
 
     def read_points_from_gpx_file(self, gpx_file_path):
-        with open(gpx_file_path, "r") as f:
-            parsed_gpx_file = gpxpy.parse(f)
-            points_from_gpx_file = parsed_gpx_file.tracks[0].segments[0].points
+        parsed_gpx_file = gpxpy.parse(gpx_file_path)
+        points_from_gpx_file = parsed_gpx_file.tracks[0].segments[0].points
 
-            i = 0
-            for point in points_from_gpx_file:
-                i += 1
-                if i % 100 == 0:
-                    self.all_points += f"{point.latitude}, {point.longitude}, "
+        i = 0
+        for point in points_from_gpx_file:
+            i += 1
+            if i % 100 == 0:
+                self.all_points += f"{point.latitude}, {point.longitude}, "
 
-            self.all_points = self.all_points[:len(self.all_points) - 2]
+        self.all_points = self.all_points[:len(self.all_points) - 2]
 
     def add_key_value_tag(self, key_value_tag):
         self.list_of_key_values_tags.append(key_value_tag)

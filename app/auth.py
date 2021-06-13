@@ -40,6 +40,7 @@ def login():
                 session['loggedin'] = True
                 session['id'] = account.id
                 session['username'] = account.username
+                session['fullname'] = account.firstname + account.lastname
                 # Redirect to home page
                 return redirect(url_for('auth.home'))
             else:
