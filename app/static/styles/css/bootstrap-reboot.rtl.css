@@ -418,6 +418,6 @@ progress {
 }
 
 [hidden] {
-  display: none !important;
+  display: none ;
 }
 /*# sourceMappingURL=bootstrap-reboot.rtl.css.map */
