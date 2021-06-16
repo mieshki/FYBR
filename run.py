@@ -1,4 +1,5 @@
 from flask import render_template
+from folium import plugins
 
 from app import create_app
 from app.map_helper import *
@@ -14,6 +15,7 @@ def hello():
     map_config = calculate_map_start_point(file_path)
 
     map = folium.Map(location=map_config.center_point, zoom_start=map_config.zoom, width='100%', height='80%')
+    plugins.Fullscreen(position='topleft', title='Full Screen', title_cancel='Exit Full Screen', force_separate_button=True).add_to(map)
 
     apply_gpx_track_on_map(file_path, map, 'red', 8, 1.0)
 

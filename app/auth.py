@@ -59,7 +59,6 @@ def register():
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form:
         # Create variables for easy access
         firstname = request.form['firstname']
-        lastname = request.form['lastname']
         username = request.form['username']
         password = request.form['password']
         email = request.form['email']
@@ -80,7 +79,7 @@ def register():
             flash('Please fill out the form!')
         else:
             # Account doesnt exists and the form data is valid, now insert new account into users table
-            user = Users(username=username, firstname=firstname, lastname=lastname, password=_hashed_password, email=email)
+            user = Users(username=username, firstname=firstname, password=_hashed_password, email=email)
             db.session.add(user)
             db.session.commit()
             flash('You have successfully registered!')
