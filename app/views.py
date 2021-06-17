@@ -15,29 +15,28 @@ views = Blueprint('views', __name__)
 def mapa():
     return render_template('maps/index.html')
 
-#do usuniecia chyba
-@views.route('/map')
-def get_map():
-    return render_template('map.html')
 
 @views.route('/test')
 def test():
     start_cords = (54.38714, 18.602002)
     start_map = folium.Map(location=start_cords, zoom_start=14, width='100%', height='100%', tiles='OpenStreetMap')
-    track_group = folium.FeatureGroup(name='track').add_to(start_map)
+    """track_group = folium.FeatureGroup(name='track').add_to(start_map)
     with open("D:\\Python\\FYBR\\gpx\\hel.gpx", "r") as f:
         gpx1 = gpxpy.parse(f)
         points = gpx1.tracks[0].segments[0].points
         tuplePoints = []
         for point in points:
             tuplePoints.append((point.latitude, point.longitude))
-        track_group.add_child(folium.vector_layers.PolyLine(locations=tuplePoints, color='blue', weight=5, opacity=0.8))
+        track_group.add_child(folium.vector_layers.PolyLine(locations=tuplePoints, color='blue', weight=5, opacity=0.8))"""
     # dodawanie map
     folium.TileLayer('openstreetmap').add_to(start_map)
     folium.TileLayer('Stamen Terrain').add_to(start_map)
     folium.LayerControl().add_to(start_map)
-    start_map.save('app/templates/map.html')
-    return render_template('maps/index.html')
+    #start_map.save('app/templates/map.html')
+    mapka = start_map._repr_html_()
+
+
+    return render_template('maps/new.html', mapa=mapka)
 
 @views.route('/rides')
 def get_rides():
@@ -46,7 +45,6 @@ def get_rides():
         rides = Ride.query.filter_by(user_id=session['id']).all()
         return render_template('rides.html', rides=rides)
     # User is not loggedin redirect to login page
-
 
 
     return redirect(url_for('auth.login'))
@@ -77,12 +75,11 @@ def save_ride_to_database(file_to_save):
     print(data)
     print_surfaces_no_map(data, folium_map, 10, 0.8)
     folium_map.save('mapka.html')
-    """
-    dodawanie do bazy działa koment tylko po to zeby testowac feturegrup na mapie statycznie
-    
+
+"""
     # parsing folium map object to plain html
     html_map = folium_map.get_root().render()
-    ride = Ride(bike_id=1, name=file_to_save.filename, gpx_file=file_to_save.read(), html_map=html_map)
+    ride = Ride(name=file_to_save.filename, gpx_file=file_to_save.read(), html_map=html_map)
     user = Users.query.filter_by(id=session['id']).first()
 
     db.session.add(ride)

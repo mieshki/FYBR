@@ -85,6 +85,7 @@ def register():
             db.session.add(user)
             db.session.commit()
             flash('You have successfully registered!')
+            redirect(url_for('auth.login'))
     elif request.method == 'POST':
         # Form is empty... (no POST data)
         flash('Please fill out the form!')

@@ -1,6 +1,8 @@
 import gpxpy
 import folium
 from app.utilities import MapConfig
+from math import floor
+import haversine
 
 
 def calculate_map_start_point(gpx_file_path):
@@ -99,11 +101,21 @@ def map_surface_color(value):
     return color
 
 def print_surfaces_no_map(data, map, width, opacity):
-    temp_list_of_nodes = []
+    surface_list = []
+    available_surfaces = []
 
     for way in data.ways:
         qualified = 0
         if 'surface' in way.tags:
+            nodes_list = []
+            for node in way.nodes:
+                nodes_list.append((node.lat, node.lon))
+
+            surface_value = way.tags.get('surface')
+            surface_list.append((surface_value, nodes_list))
+
+            available_surfaces.append(surface_value)
+
             qualified = 1
 
         if qualified != 1:
@@ -111,10 +123,49 @@ def print_surfaces_no_map(data, map, width, opacity):
         else:
             qualified = 0
 
-        for node in way.nodes:
-            temp_list_of_nodes.append((node.lat, node.lon))
-        track_group = folium.FeatureGroup(name=way.tags.get('surface')).add_to(map)
-        track_group.add_child(folium.vector_layers.PolyLine(locations=temp_list_of_nodes, color=map_surface_color(way.tags['surface']), weight=width, opacity=opacity, tooltip=generate_tooltip(way)))
-        temp_list_of_nodes = []
-        print(f'way:{way}\n')
+
+    available_surfaces = list(dict.fromkeys(available_surfaces))
+
+    for surface in available_surfaces:
+        feature_group = folium.FeatureGroup(surface)
+        for tuple in surface_list:
+            if tuple[0] == surface:
+                folium.PolyLine(locations=tuple[1], color=map_surface_color(surface), tooltip=surface, weight=width, opacity=opacity).add_to(feature_group)
+        feature_group.add_to(map)
+
     folium.LayerControl().add_to(map)
+
+
+
+def test():
+    time_dif = [0]
+    dist_dif_hav_2d = [0]
+    dist_dif_vin_2d = [0]
+    with open("gpx\\gdansk.gpx", "r") as f:
+        parsed_gpx_file = gpxpy.parse(f)
+        data = parsed_gpx_file.tracks[0].segments[0].points
+    for index in range(len(data)):
+        if index == 0:
+            pass
+        else:
+            start = data[index - 1]
+            stop = data[index]
+            distance_hav_2d = haversine.haversine((start.latitude, start.longitude),
+                                                  (stop.latitude, stop.longitude)) * 1000
+            dist_dif_hav_2d.append(distance_hav_2d)
+            time_delta = (stop.time - start.time).total_seconds()
+            time_dif.append(time_delta)
+    print('Total Time : ', floor(sum(time_dif) / 60), ' min ', int(sum(time_dif) % 60), ' sec ')
+    average_speed = 0
+    meters_traveled = 0
+    dist_dif_per_sec = []
+    #dist_dif_with_timeout = dist_dif_hav_2d > 0.9
+    for i in range(0, len(dist_dif_hav_2d)):
+        if time_dif[i] != 0:
+            meters_traveled += dist_dif_hav_2d[i]
+            average_speed += (dist_dif_hav_2d[i] / time_dif[i]) * 3.6
+            dist_dif_per_sec.append(dist_dif_hav_2d[i] / time_dif[i])
+    #https://towardsdatascience.com/how-tracking-apps-analyse-your-gps-data-a-hands-on-tutorial-in-python-756d4db6715d
+    print('Total distance: ', int(meters_traveled), 'meters')
+    print('Speed: ', '{:.2f}'.format(average_speed / len(dist_dif_hav_2d)), 'km/h')
+    #"{:.3f}".format(dist_vin[-1] / 1000)
