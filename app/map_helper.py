@@ -1,6 +1,6 @@
 import gpxpy
 import folium
-from app.utilities import MapConfig
+from app.utilities import MapConfig, OverpassQuery, Overpass
 from math import floor
 import haversine
 
@@ -60,26 +60,40 @@ def generate_tooltip(way):
         tooltip += f'\"{key}\"=\"{way.tags[key]}\"<br>'
     return tooltip
 
-def print_cycleways_on_map(data, map, color, width, opacity):
-    temp_list_of_nodes = []
+def print_cycleways_on_map(data, map, width, opacity):
+    highway_list = []
+    available_highway = []
+
     for way in data.ways:
         qualified = 0
         if 'highway' in way.tags:
-            if way.tags['highway'] == 'cycleway':
-                qualified = 1
+            nodes_list = []
+            for node in way.nodes:
+                nodes_list.append((node.lat, node.lon))
+
+            highway_value = way.tags.get('highway')
+            highway_list.append((highway_value, nodes_list))
+
+            available_highway.append(highway_value)
+
+            qualified = 1
 
         if qualified != 1:
             continue
         else:
             qualified = 0
 
-        for node in way.nodes:
-            temp_list_of_nodes.append((node.lat, node.lon))
-        folium.vector_layers.PolyLine(locations=temp_list_of_nodes, color=color, weight=width, opacity=opacity, tooltip=generate_tooltip(way)).add_to(map)
-        temp_list_of_nodes = []
+    available_highway = list(dict.fromkeys(available_highway))
 
-        print(f'way:{way}\n')
-    pass
+    for highway in available_highway:
+        feature_group = folium.FeatureGroup(highway)
+        for tuple in highway_list:
+            if tuple[0] == highway:
+                folium.PolyLine(locations=tuple[1], color=map_surface_color(highway), tooltip=highway, weight=width,
+                                opacity=opacity).add_to(feature_group)
+        feature_group.add_to(map)
+
+
 
 def map_surface_color(value):
     color = 'darkpurple'
@@ -99,6 +113,8 @@ def map_surface_color(value):
         color = 'beige'
 
     return color
+
+
 
 def print_surfaces_no_map(data, map, width, opacity):
     surface_list = []
@@ -133,7 +149,7 @@ def print_surfaces_no_map(data, map, width, opacity):
                 folium.PolyLine(locations=tuple[1], color=map_surface_color(surface), tooltip=surface, weight=width, opacity=opacity).add_to(feature_group)
         feature_group.add_to(map)
 
-    folium.LayerControl().add_to(map)
+    #folium.LayerControl().add_to(map)
 
 
 
@@ -169,3 +185,4 @@ def test():
     print('Total distance: ', int(meters_traveled), 'meters')
     print('Speed: ', '{:.2f}'.format(average_speed / len(dist_dif_hav_2d)), 'km/h')
     #"{:.3f}".format(dist_vin[-1] / 1000)
+
