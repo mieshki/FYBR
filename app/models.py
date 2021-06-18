@@ -22,6 +22,10 @@ class Ride(db.Model):
     name = db.Column(db.String(100))
     gpx_file = db.Column(db.LargeBinary)  # gpx files in byte array
     html_map = db.Column(db.String)
+    map_png = db.Column(db.LargeBinary)
+    time = db.Column(db.String)
+    speed = db.Column(db.String)
+    distance = db.Column(db.String)
     photos = db.relationship('Photo', backref="ride")
 
 

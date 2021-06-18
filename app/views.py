@@ -14,6 +14,9 @@ views = Blueprint('views', __name__)
 def mapa():
     return render_template('maps/index.html')
 
+@views.route('/map')
+def get_map():
+    return render_template('map.html')
 
 @views.route('/test')
 def test():
@@ -51,8 +54,41 @@ def upload_files():
 def map_generator(ride_id):
     ride = Ride.query.filter_by(id=ride_id).first()
     mapka = ride.html_map
+    time, speed, distance = stats_from_gpx(ride.gpx_file)
+    return render_template('maps/new.html', mapa=mapka, time=time, speed=speed, distance=distance)
 
-    return render_template('maps/new.html', mapa=mapka)
+def stats_from_gpx(gpx_file):
+    time_dif = [0]
+    dist_dif_hav_2d = [0]
+    dist_dif_vin_2d = [0]
+    parsed_gpx_file = gpxpy.parse(gpx_file)
+    data = parsed_gpx_file.tracks[0].segments[0].points
+    for index in range(len(data)):
+        if index == 0:
+            pass
+        else:
+            start = data[index - 1]
+            stop = data[index]
+            distance_hav_2d = haversine.haversine((start.latitude, start.longitude),
+                                                  (stop.latitude, stop.longitude)) * 1000
+            dist_dif_hav_2d.append(distance_hav_2d)
+            time_delta = (stop.time - start.time).total_seconds()
+            time_dif.append(time_delta)
+    print()
+    time = f'Total Time : {floor(sum(time_dif) / 60)} min {int(sum(time_dif) % 60)} sec'
+    average_speed = 0
+    meters_traveled = 0
+    dist_dif_per_sec = []
+    #dist_dif_with_timeout = dist_dif_hav_2d > 0.9
+    for i in range(0, len(dist_dif_hav_2d)):
+        if time_dif[i] != 0:
+            meters_traveled += dist_dif_hav_2d[i]
+            average_speed += (dist_dif_hav_2d[i] / time_dif[i]) * 3.6
+            dist_dif_per_sec.append(dist_dif_hav_2d[i] / time_dif[i])
+    #https://towardsdatascience.com/how-tracking-apps-analyse-your-gps-data-a-hands-on-tutorial-in-python-756d4db6715d
+    distance = f'Total distance: {int(meters_traveled)} meters'
+    speed = f'Speed: ' + '{:.2f}'.format(average_speed / len(dist_dif_hav_2d)) + ' km/h'
+    return time, speed, distance
 
 
 def save_ride_to_database(file_to_save):
@@ -73,9 +109,10 @@ def save_ride_to_database(file_to_save):
     print_surfaces_no_map(data, folium_map, 10, 0.6)
     print_cycleways_on_map(data, folium_map, 10, 0.6)
     folium.LayerControl().add_to(folium_map)
-
     html_map = folium_map._repr_html_()
-    ride = Ride(name=file_to_save.filename, gpx_file=temp, html_map=html_map)
+    time, speed, distance = stats_from_gpx(temp)
+
+    ride = Ride(name=file_to_save.filename, gpx_file=temp, html_map=html_map, map_png=map_png, time=time, speed=speed, distance=distance)
     user = Users.query.filter_by(id=session['id']).first()
 
     db.session.add(ride)

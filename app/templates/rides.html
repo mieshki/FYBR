@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% block title %} Your rides {% endblock %}
 {% block content %}
-<div class="row">Te kolory są tylko poglądowe dla divów</div>
     {% if not rides %}
         <h2>Niestety nie masz żadnych przejazdów. Dodaj nowy :)</h2>
     {% else %}
@@ -9,11 +8,14 @@
 
             <div class="row p-1" >
                 <div class="col-3" style="background-color: #86b7fe" >
-                    <div style="width: 100px; height: 100px; background-color: #ffc720"> TUTAJ MINIATURA MAPY W IFRAME</div>
+                     {{ride.html_map|safe}}
                 </div>
                 <div class="col-7" style="background-color: #0f5132">
                     <h2>Opis trasy</h2>
-                    <h3>{{ride.name}}</h3>
+                    <h4>{{ride.name}}</h4>
+                    <h4>{{ride.distance}}</h4>
+                    <h4>{{ride.time}}</h4>
+                    <h4>{{ride.speed}}</h4>
                 </div>
                 <div class="col-2 p-4" style="background-color: #0c63e4">
                     <form action='/view/{{ ride.id }}' method="post" autocomplete="off">
