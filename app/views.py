@@ -112,7 +112,7 @@ def save_ride_to_database(file_to_save):
     html_map = folium_map._repr_html_()
     time, speed, distance = stats_from_gpx(temp)
 
-    ride = Ride(name=file_to_save.filename, gpx_file=temp, html_map=html_map, map_png=map_png, time=time, speed=speed, distance=distance)
+    ride = Ride(name=file_to_save.filename, gpx_file=temp, html_map=html_map, time=time, speed=speed, distance=distance)
     user = Users.query.filter_by(id=session['id']).first()
 
     db.session.add(ride)
