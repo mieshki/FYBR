@@ -16,10 +16,15 @@ class Users(db.Model):
 class Ride(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    bike_id = db.Column(db.Integer, db.ForeignKey('bike.id'))
+    bike_id = db.Column(db.Integer, db.ForeignKey('bike.id'), nullable=True)
     date = db.Column(db.DateTime(timezone=True), default=func.now())  # auto timestamp after upload
     name = db.Column(db.String(100))
     gpx_file = db.Column(db.LargeBinary)  # gpx files in byte array
+    html_map = db.Column(db.String)
+    map_png = db.Column(db.LargeBinary)
+    time = db.Column(db.String)
+    speed = db.Column(db.String)
+    distance = db.Column(db.String)
     photos = db.relationship('Photo', backref="ride")
 
 

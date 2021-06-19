@@ -40,6 +40,7 @@ def login():
                 session['loggedin'] = True
                 session['id'] = account.id
                 session['username'] = account.username
+                session['fullname'] = account.firstname + account.lastname
                 # Redirect to home page
                 return redirect(url_for('auth.home'))
             else:
@@ -83,6 +84,7 @@ def register():
             db.session.add(user)
             db.session.commit()
             flash('You have successfully registered!')
+            redirect(url_for('auth.login'))
     elif request.method == 'POST':
         # Form is empty... (no POST data)
         flash('Please fill out the form!')
