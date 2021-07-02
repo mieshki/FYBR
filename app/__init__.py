@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from decouple import config
 
 db = SQLAlchemy()
 
@@ -7,7 +8,7 @@ db = SQLAlchemy()
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
-        SECRET_KEY='FYBR'
+        SECRET_KEY=config('database_secret', default=" ")
     )
 
     from .views import views
@@ -15,7 +16,7 @@ def create_app():
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://FYBR:FYBR@127.0.0.1/FYBR'
+    app.config['SQLALCHEMY_DATABASE_URI'] = config('database_uri', default=" ")
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
 

@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, session, redirect, url_for, request
 from app.map_helper import *
 from app.utilities import *
-
 from . import db
 from app.models import Ride, Users
 from .map_helper import calculate_map_start_point, apply_gpx_track_on_map, print_surfaces_no_map
