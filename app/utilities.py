@@ -39,7 +39,8 @@ class OverpassQuery:
         self.around = 10
         self.list_of_key_values_tags = []
         self.all_points = ''
-        self.read_points_from_gpx_file(gpx_file_path)
+        if gpx_file_path is not None:
+            self.read_points_from_gpx_file(gpx_file_path)
 
     def read_points_from_gpx_file(self, gpx_file_path):
         parsed_gpx_file = gpxpy.parse(gpx_file_path)
